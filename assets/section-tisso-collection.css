@@ -279,9 +279,11 @@
   width: 5px;
 }
 
-/* Light accents (white, cream, etc.) need an edge or they disappear on white */
+/* Light accents (white, cream, etc.): black edge on the right only so the strip stays visible */
 .tisso-popup__swatch[data-swatch-light='true']::before {
-  box-shadow: inset 0 0 0 1px #b3b3b3;
+  box-shadow: none;
+  border: 0;
+  border-right: 1px solid #000;
 }
 
 .tisso-popup__swatch.is-selected {
