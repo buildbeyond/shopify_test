@@ -438,6 +438,26 @@
     if (this.els.description) this.els.description.textContent = product.description || '';
   };
 
+  function sortedOptions(product) {
+    return product.options
+      .map(function (option, index) {
+        return { option: option, index: index };
+      })
+      .sort(function (a, b) {
+        var aColor = isColorOption(a.option.name);
+        var bColor = isColorOption(b.option.name);
+        var aSize = isSizeOption(a.option.name);
+        var bSize = isSizeOption(b.option.name);
+
+        // Color first, then Size, then anything else in original order
+        if (aColor && !bColor) return -1;
+        if (!aColor && bColor) return 1;
+        if (aSize && !bSize) return 1;
+        if (!aSize && bSize) return -1;
+        return a.index - b.index;
+      });
+  }
+
   TissoCollection.prototype.renderOptions = function () {
     var self = this;
     var product = this.product;
@@ -445,7 +465,9 @@
 
     this.els.options.innerHTML = '';
 
-    product.options.forEach(function (option, optionIndex) {
+    sortedOptions(product).forEach(function (entry, displayIndex) {
+      var option = entry.option;
+      var optionIndex = entry.index;
       var field = document.createElement('div');
       field.className = 'tisso-popup__option';
 
@@ -454,7 +476,7 @@
       label.textContent = option.name;
       field.appendChild(label);
 
-      var useSwatches = isColorOption(option.name) || (!isSizeOption(option.name) && optionIndex === 0);
+      var useSwatches = isColorOption(option.name) || (!isSizeOption(option.name) && displayIndex === 0);
 
       if (useSwatches) {
         var swatches = document.createElement('div');
