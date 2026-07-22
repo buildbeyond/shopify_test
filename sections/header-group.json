@@ -33,6 +33,34 @@
     },
     "tisso_header_F7bhP8": {
       "type": "tisso-header",
+      "blocks": {
+        "menu_link_44UjGY": {
+          "type": "menu_link",
+          "settings": {
+            "label": "Shop",
+            "link": ""
+          }
+        },
+        "menu_link_mmkriq": {
+          "type": "menu_link",
+          "settings": {
+            "label": "Gift guide",
+            "link": ""
+          }
+        },
+        "menu_link_gic6Fq": {
+          "type": "menu_link",
+          "settings": {
+            "label": "About",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "menu_link_44UjGY",
+        "menu_link_mmkriq",
+        "menu_link_gic6Fq"
+      ],
       "name": "Header",
       "settings": {
         "background_color": "#FFFFFF",
