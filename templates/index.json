@@ -18,9 +18,19 @@
         "button_label": "SHOP NOW",
         "button_link": ""
       }
+    },
+    "tisso_collection_3CApzQ": {
+      "type": "tisso-collection",
+      "name": "Collection grid",
+      "settings": {
+        "heading": "Tisso vison in the wild",
+        "collection": "frontpage",
+        "soft_winter_jacket": ""
+      }
     }
   },
   "order": [
-    "tisso_banner_mN3K76"
+    "tisso_banner_mN3K76",
+    "tisso_collection_3CApzQ"
   ]
 }
