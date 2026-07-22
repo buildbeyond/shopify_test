@@ -1,0 +1,136 @@
+/* Gift Guide banner — built from scratch */
+
+.tisso-banner {
+  --tisso-banner-black: #000;
+  --tisso-banner-white: #fff;
+  --tisso-banner-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  position: relative;
+  width: 100%;
+  min-height: clamp(42rem, 56vw, 68rem);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--tisso-banner-white);
+  color: var(--tisso-banner-black);
+  font-family: var(--tisso-banner-font);
+}
+
+.tisso-banner *,
+.tisso-banner *::before,
+.tisso-banner *::after {
+  box-sizing: border-box;
+}
+
+.tisso-banner__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.tisso-banner__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+}
+
+.tisso-banner__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 52rem;
+  padding: 6rem 4rem;
+}
+
+.tisso-banner__title {
+  margin: 0 0 1.6rem;
+  font-size: clamp(3.6rem, 5vw, 5.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.tisso-banner__description {
+  margin: 0 0 2.8rem;
+  max-width: 44rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+
+.tisso-banner__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 4.4rem;
+  padding: 1.1rem 2.2rem;
+  border: 0;
+  background: var(--tisso-banner-black);
+  color: var(--tisso-banner-white);
+  font-family: inherit;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tisso-banner__button-label,
+.tisso-banner__button-arrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tisso-banner__button-arrow {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.tisso-banner__button:hover,
+.tisso-banner__button:focus-visible {
+  background: #1a1a1a;
+  color: var(--tisso-banner-white);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  outline: none;
+}
+
+.tisso-banner__button:hover .tisso-banner__button-arrow,
+.tisso-banner__button:focus-visible .tisso-banner__button-arrow {
+  transform: translateX(0.4rem);
+}
+
+.tisso-banner__button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+@media screen and (max-width: 749px) {
+  .tisso-banner {
+    min-height: 36rem;
+  }
+
+  .tisso-banner__content {
+    padding: 3.2rem 2rem;
+    text-align: center;
+    max-width: none;
+  }
+
+  .tisso-banner__title {
+    font-size: 3.2rem;
+  }
+
+  .tisso-banner__description {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 32rem;
+    font-size: 1.4rem;
+  }
+}
