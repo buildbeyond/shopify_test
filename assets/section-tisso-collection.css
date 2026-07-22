@@ -47,8 +47,13 @@
 .tisso-collection__item {
   position: relative;
   aspect-ratio: 1 / 1;
+  min-height: 12rem;
   overflow: hidden;
   background: #f4f4f4;
+}
+
+.tisso-collection__item script {
+  display: none;
 }
 
 .tisso-collection__image,

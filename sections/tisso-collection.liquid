@@ -7,10 +7,16 @@
 <script src="{{ 'section-tisso-collection.js' | asset_url }}" defer></script>
 
 {%- liquid
-  assign collection = section.settings.collection
-  assign products_limit = 6
+  assign products_to_show = 6
   assign bonus_product = section.settings.soft_winter_jacket
   assign bonus_variant_id = blank
+
+  if section.settings.collection != blank
+    assign section_collection = collections[section.settings.collection.handle]
+    if section_collection == blank
+      assign section_collection = section.settings.collection
+    endif
+  endif
 
   if bonus_product != blank
     assign bonus_variant_id = bonus_product.selected_or_first_available_variant.id
@@ -32,79 +38,86 @@
     <h2 class="tisso-collection__heading">{{ section.settings.heading | escape }}</h2>
   {%- endif -%}
 
-  {%- if collection != blank and collection.products_count > 0 -%}
-    <ul class="tisso-collection__grid">
-      {%- for product in collection.products limit: products_limit -%}
-        <li class="tisso-collection__item" data-tisso-product-item>
-          {%- if product.featured_media != blank -%}
-            {%- liquid
-              assign image_alt = product.featured_media.alt
-              if image_alt == blank
-                assign image_alt = product.title
-              endif
-            -%}
-            {{
-              product.featured_media
-              | image_url: width: 1200
-              | image_tag:
-                class: 'tisso-collection__image',
-                loading: 'lazy',
-                widths: '400, 600, 800, 1000, 1200',
-                sizes: '(max-width: 749px) 50vw, 33vw',
-                alt: image_alt
-            }}
-          {%- else -%}
-            {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
-          {%- endif -%}
-
-          <button
-            type="button"
-            class="tisso-collection__hotspot"
-            data-tisso-hotspot
-            aria-label="Quick view {{ product.title | escape }}"
+  {%- if section_collection != blank and section_collection.products_count > 0 -%}
+    <ul class="tisso-collection__grid" role="list">
+      {%- paginate section_collection.products by products_to_show -%}
+        {%- for collection_product in section_collection.products -%}
+          <li
+            class="tisso-collection__item"
+            data-tisso-product-item
+            data-product-id="{{ collection_product.id }}"
           >
-            <span aria-hidden="true">+</span>
-          </button>
+            {%- if collection_product.featured_media != blank -%}
+              {%- liquid
+                assign image_alt = collection_product.featured_media.alt
+                if image_alt == blank
+                  assign image_alt = collection_product.title
+                endif
+              -%}
+              {{
+                collection_product.featured_media
+                | image_url: width: 1200
+                | image_tag:
+                  class: 'tisso-collection__image',
+                  loading: 'lazy',
+                  widths: '400, 600, 800, 1000, 1200',
+                  sizes: '(max-width: 749px) 50vw, 33vw',
+                  alt: image_alt
+              }}
+            {%- else -%}
+              {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
 
-          <script type="application/json" data-tisso-product-json>
-            {
-              "id": {{ product.id | json }},
-              "title": {{ product.title | json }},
-              "description": {{ product.description | strip_html | truncate: 220 | json }},
-              "price": {{ product.price | json }},
-              "featured_image": {% if product.featured_media %}{{ product.featured_media | image_url: width: 400 | json }}{% else %}""{% endif %},
-              "options": [
-                {%- for option in product.options_with_values -%}
-                  {
-                    "name": {{ option.name | json }},
-                    "values": {{ option.values | json }}
-                  }{%- unless forloop.last -%},{%- endunless -%}
-                {%- endfor -%}
-              ],
-              "variants": [
-                {%- for variant in product.variants -%}
-                  {
-                    "id": {{ variant.id | json }},
-                    "title": {{ variant.title | json }},
-                    "available": {{ variant.available | json }},
-                    "price": {{ variant.price | json }},
-                    "option1": {{ variant.option1 | json }},
-                    "option2": {{ variant.option2 | json }},
-                    "option3": {{ variant.option3 | json }}
-                  }{%- unless forloop.last -%},{%- endunless -%}
-                {%- endfor -%}
-              ]
-            }
-          </script>
-        </li>
-      {%- endfor -%}
+            <button
+              type="button"
+              class="tisso-collection__hotspot"
+              data-tisso-hotspot
+              aria-label="Quick view {{ collection_product.title | escape }}"
+            >
+              <span aria-hidden="true">+</span>
+            </button>
+
+            {%- comment -%}Product payload for the modal (kept out of visible DOM via CSS).{%- endcomment -%}
+            <script type="application/json" data-tisso-product-json>
+              {
+                "id": {{ collection_product.id | json }},
+                "title": {{ collection_product.title | json }},
+                "description": {{ collection_product.description | strip_html | truncate: 220 | json }},
+                "price": {{ collection_product.price | json }},
+                "featured_image": {% if collection_product.featured_media %}{{ collection_product.featured_media | image_url: width: 400 | json }}{% else %}""{% endif %},
+                "options": [
+                  {%- for option in collection_product.options_with_values -%}
+                    {
+                      "name": {{ option.name | json }},
+                      "values": {{ option.values | json }}
+                    }{%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ],
+                "variants": [
+                  {%- for variant in collection_product.variants -%}
+                    {
+                      "id": {{ variant.id | json }},
+                      "title": {{ variant.title | json }},
+                      "available": {{ variant.available | json }},
+                      "price": {{ variant.price | json }},
+                      "option1": {{ variant.option1 | json }},
+                      "option2": {{ variant.option2 | json }},
+                      "option3": {{ variant.option3 | json }}
+                    }{%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ]
+              }
+            </script>
+          </li>
+        {%- endfor -%}
+      {%- endpaginate -%}
     </ul>
   {%- else -%}
     <p class="tisso-collection__empty">
-      {%- if collection == blank -%}
+      {%- if section.settings.collection == blank -%}
         Select a collection to display products.
       {%- else -%}
-        This collection has no products yet.
+        This collection has no products yet. Add products to the collection in Shopify admin.
       {%- endif -%}
     </p>
   {%- endif -%}
@@ -157,7 +170,8 @@
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection"
+      "label": "Collection",
+      "info": "Shows up to 6 products from the selected collection."
     },
     {
       "type": "product",
