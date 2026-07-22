@@ -4,7 +4,6 @@
   --tisso-banner-black: #000;
   --tisso-banner-white: #fff;
   --tisso-banner-bar: #ececec;
-  --tisso-banner-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   position: relative;
   width: 100%;
@@ -13,7 +12,7 @@
   overflow: hidden;
   background: var(--tisso-banner-white);
   color: var(--tisso-banner-black);
-  font-family: var(--tisso-banner-font);
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
 }
 
 .tisso-banner *,
@@ -59,6 +58,7 @@
 
 .tisso-banner__title {
   margin: 0 0 1.6rem;
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
   font-size: clamp(3.6rem, 5vw, 5.6rem);
   font-weight: 700;
   letter-spacing: -0.02em;

@@ -4,14 +4,12 @@
   --tisso-black: #000;
   --tisso-white: #fff;
   --tisso-gap: 0.8rem;
-  --tisso-font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --tisso-font-serif: 'Times New Roman', Times, Georgia, serif;
 
   width: 100%;
   padding: 4.8rem 4rem 6.4rem;
   background: var(--tisso-white);
   color: var(--tisso-black);
-  font-family: var(--tisso-font-sans);
+  font-family: var(--tisso-font-lustria), 'Lustria', serif;
 }
 
 .tisso-collection *,
@@ -22,7 +20,7 @@
 
 .tisso-collection__heading {
   margin: 0 0 2.4rem;
-  font-family: var(--tisso-font-serif);
+  font-family: var(--tisso-font-lustria), 'Lustria', serif;
   font-size: clamp(2.8rem, 3.2vw, 3.6rem);
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -31,6 +29,7 @@
 
 .tisso-collection__empty {
   margin: 0;
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
   font-size: 1.4rem;
   color: #666;
 }
@@ -162,6 +161,7 @@
   background: var(--tisso-white);
   border: 1px solid var(--tisso-black);
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
   transform: translateY(1.2rem);
   transition: transform 0.28s ease;
 }
@@ -205,20 +205,23 @@
 
 .tisso-popup__title {
   margin: 0 0 0.6rem;
+  font-family: var(--tisso-font-lustria), 'Lustria', serif;
   font-size: 1.8rem;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.25;
 }
 
 .tisso-popup__price {
   margin: 0 0 1rem;
+  font-family: var(--tisso-font-lustria), 'Lustria', serif;
   font-size: 2.2rem;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.2;
 }
 
 .tisso-popup__description {
   margin: 0;
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
   font-size: 1.3rem;
   line-height: 1.45;
   color: #222;
@@ -233,6 +236,7 @@
 .tisso-popup__option-label {
   display: block;
   margin-bottom: 0.8rem;
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
   font-size: 1.4rem;
   font-weight: 500;
 }
@@ -252,7 +256,7 @@
   border: 1px solid var(--tisso-black);
   background: var(--tisso-white);
   color: var(--tisso-black);
-  font-family: inherit;
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
   font-size: 1.4rem;
   font-weight: 500;
   text-align: left;
@@ -314,7 +318,7 @@
   border-radius: 0;
   background: var(--tisso-white);
   color: var(--tisso-black);
-  font-family: inherit;
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
   font-size: 1.4rem;
   appearance: none;
   cursor: pointer;
@@ -357,7 +361,7 @@
   border: 0;
   background: var(--tisso-black);
   color: var(--tisso-white);
-  font-family: inherit;
+  font-family: var(--tisso-font-jost), 'Jost', sans-serif;
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.08em;
