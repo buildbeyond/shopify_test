@@ -9,7 +9,7 @@
   width: 100%;
   min-height: clamp(42rem, 56vw, 68rem);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   overflow: hidden;
   background: var(--tisso-banner-white);
   color: var(--tisso-banner-black);
@@ -28,12 +28,17 @@
   z-index: 0;
 }
 
-.tisso-banner__media img {
+.tisso-banner__media img,
+.tisso-banner__media .placeholder-svg {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center right;
+}
+
+.tisso-banner__media .placeholder-svg {
+  background: #f0f0f0;
 }
 
 .tisso-banner__content {

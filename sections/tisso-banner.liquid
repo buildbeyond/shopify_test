@@ -9,8 +9,8 @@
   id="TissoBanner-{{ section.id }}"
   class="tisso-banner"
 >
-  {%- if section.settings.background_image != blank -%}
-    <div class="tisso-banner__media" aria-hidden="true">
+  <div class="tisso-banner__media" aria-hidden="true">
+    {%- if section.settings.background_image != blank -%}
       {{
         section.settings.background_image
         | image_url: width: 3840
@@ -20,8 +20,10 @@
           sizes: '100vw',
           alt: ''
       }}
-    </div>
-  {%- endif -%}
+    {%- else -%}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
 
   <div class="tisso-banner__content">
     {%- if section.settings.title != blank -%}
