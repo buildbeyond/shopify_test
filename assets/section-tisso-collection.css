@@ -248,7 +248,7 @@
   display: flex;
   align-items: center;
   min-height: 4.4rem;
-  padding: 1rem 1.2rem;
+  padding: 1rem 1.2rem 1rem 1.8rem;
   border: 1px solid var(--tisso-black);
   background: var(--tisso-white);
   color: var(--tisso-black);
@@ -260,13 +260,33 @@
   transition: background-color 0.2s ease;
 }
 
+/* Always show the color strip so each option is identifiable */
+.tisso-popup__swatch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: var(--swatch-accent, #1f4b99);
+}
+
+.tisso-popup__swatch.is-selected::before {
+  width: 5px;
+}
+
+/* Light accents (white, cream, etc.) need an edge or they disappear on white */
+.tisso-popup__swatch[data-swatch-light='true']::before {
+  box-shadow: inset 0 0 0 1px #b3b3b3;
+}
+
 .tisso-popup__swatch.is-selected {
-  box-shadow: inset 4px 0 0 0 var(--swatch-accent, #1f4b99);
+  background: #fafafa;
 }
 
 .tisso-popup__swatch:hover,
 .tisso-popup__swatch:focus-visible {
-  background: #fafafa;
+  background: #f5f5f5;
   outline: none;
 }
 

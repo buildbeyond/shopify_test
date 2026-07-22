@@ -47,7 +47,7 @@
     var map = {
       blue: '#1f4b99',
       black: '#000000',
-      white: '#cfcfcf',
+      white: '#ffffff',
       red: '#b00020',
       green: '#1f7a3f',
       brown: '#6b3f2a',
@@ -56,8 +56,24 @@
       gray: '#777777',
       navy: '#0b1f44',
       pink: '#d46a8e',
+      cream: '#f5f0e6',
+      ivory: '#fffff0',
+      yellow: '#e6c200',
     };
     return map[normalize(value)] || '#1f4b99';
+  }
+
+  function isLightColor(value) {
+    var n = normalize(value);
+    return (
+      n === 'white' ||
+      n === 'ivory' ||
+      n === 'cream' ||
+      n === 'beige' ||
+      n === 'off-white' ||
+      n === 'offwhite' ||
+      n === 'yellow'
+    );
   }
 
   function stripHtml(html) {
@@ -492,6 +508,7 @@
           button.dataset.optionName = option.name;
           button.dataset.optionValue = value;
           button.style.setProperty('--swatch-accent', accentForColor(value));
+          button.dataset.swatchLight = isLightColor(value) ? 'true' : 'false';
           button.setAttribute('role', 'option');
 
           button.addEventListener('click', function () {
