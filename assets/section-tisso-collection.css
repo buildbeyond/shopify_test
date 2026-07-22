@@ -281,7 +281,14 @@
 }
 
 .tisso-popup__swatch.is-selected {
-  background: #fafafa;
+  background: var(--tisso-black);
+  color: var(--tisso-white);
+}
+
+.tisso-popup__swatch.is-selected:hover,
+.tisso-popup__swatch.is-selected:focus-visible {
+  background: var(--tisso-black);
+  color: var(--tisso-white);
 }
 
 .tisso-popup__swatch:hover,
