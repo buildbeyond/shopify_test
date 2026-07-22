@@ -1,0 +1,82 @@
+{
+  "sections": {
+    "tisso_banner": {
+      "type": "tisso-banner",
+      "settings": {
+        "logo_text": "TISSO VISON",
+        "announcement_text": "Find the ideal gift for your loved ones.",
+        "choose_button_label": "CHOOSE GIFT",
+        "choose_button_color": "#FFE600",
+        "heading": "The Gift Guide",
+        "text": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
+        "shop_button_label": "SHOP NOW",
+        "bottom_bar_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL",
+        "bottom_bar_text_mobile": "SUSTAINABLE, ETHICALLY MADE ACTIVEWEAR",
+        "bottom_bar_color": "#ECECEC",
+        "background_color": "#F2F2F2"
+      }
+    },
+    "tisso_grid": {
+      "type": "tisso-grid",
+      "blocks": {
+        "product_1": {
+          "type": "product_block",
+          "settings": {
+            "hotspot_x": 55,
+            "hotspot_y": 55
+          }
+        },
+        "product_2": {
+          "type": "product_block",
+          "settings": {
+            "hotspot_x": 48,
+            "hotspot_y": 42
+          }
+        },
+        "product_3": {
+          "type": "product_block",
+          "settings": {
+            "hotspot_x": 50,
+            "hotspot_y": 35
+          }
+        },
+        "product_4": {
+          "type": "product_block",
+          "settings": {
+            "hotspot_x": 45,
+            "hotspot_y": 40
+          }
+        },
+        "product_5": {
+          "type": "product_block",
+          "settings": {
+            "hotspot_x": 42,
+            "hotspot_y": 38
+          }
+        },
+        "product_6": {
+          "type": "product_block",
+          "settings": {
+            "hotspot_x": 55,
+            "hotspot_y": 35
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4",
+        "product_5",
+        "product_6"
+      ],
+      "settings": {
+        "heading": "Tisso vison in the wild"
+      }
+    }
+  },
+  "order": [
+    "tisso_banner",
+    "tisso_grid"
+  ]
+}

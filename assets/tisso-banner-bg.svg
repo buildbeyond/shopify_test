@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none" aria-hidden="true">
+  <rect width="1600" height="900" fill="#f2f2f2"/>
+  <g stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9">
+    <!-- Camera -->
+    <g transform="translate(780,120)">
+      <rect x="40" y="70" width="220" height="150" rx="10"/>
+      <path d="M70 70 L95 35 H205 L230 70"/>
+      <circle cx="150" cy="145" r="48"/>
+      <circle cx="150" cy="145" r="28"/>
+      <circle cx="230" cy="95" r="8"/>
+      <rect x="0" y="140" width="40" height="18" rx="3"/>
+    </g>
+    <!-- Map under camera -->
+    <g transform="translate(700,250)">
+      <path d="M40 40 L160 20 L300 45 L280 190 L140 210 L20 175 Z"/>
+      <path d="M90 70 C120 50, 170 55, 200 80 C230 105, 250 140, 230 165"/>
+      <circle cx="170" cy="110" r="6"/>
+    </g>
+    <!-- Sunglasses -->
+    <g transform="translate(1050,180)">
+      <path d="M20 40 H90 A35 35 0 0 1 160 40 H230"/>
+      <circle cx="55" cy="55" r="32"/>
+      <circle cx="195" cy="55" r="32"/>
+      <path d="M87 55 H163"/>
+    </g>
+    <!-- Compass -->
+    <g transform="translate(1280,300)">
+      <circle cx="70" cy="70" r="60"/>
+      <circle cx="70" cy="70" r="46"/>
+      <path d="M70 30 L82 70 L70 110 L58 70 Z" fill="#111"/>
+      <path d="M70 30 V20 M70 120 V130 M20 70 H10 M130 70 H120"/>
+    </g>
+    <!-- Notebook -->
+    <g transform="translate(980,420)">
+      <rect x="30" y="20" width="170" height="220" rx="6"/>
+      <path d="M30 50 H200 M55 20 V240"/>
+      <path d="M80 90 H175 M80 120 H175 M80 150 H150"/>
+    </g>
+    <!-- Fountain pen -->
+    <g transform="translate(1180,520)">
+      <path d="M20 40 L220 180"/>
+      <path d="M20 40 L45 55 L35 70 Z"/>
+      <path d="M150 130 L175 110 L195 145 L170 160 Z"/>
+    </g>
+    <!-- Pencil -->
+    <g transform="translate(900,620)">
+      <path d="M40 40 L260 160"/>
+      <path d="M40 40 L60 55 L50 70 Z"/>
+      <path d="M230 145 H270 L255 175 Z"/>
+    </g>
+    <!-- Watch -->
+    <g transform="translate(720,520)">
+      <rect x="55" y="10" width="50" height="40" rx="8"/>
+      <circle cx="80" cy="110" r="55"/>
+      <circle cx="80" cy="110" r="40"/>
+      <path d="M80 110 L80 80 M80 110 L105 120"/>
+      <rect x="55" y="165" width="50" height="40" rx="8"/>
+    </g>
+    <!-- Lenses / film cans -->
+    <g transform="translate(1250,560)">
+      <ellipse cx="50" cy="40" rx="40" ry="16"/>
+      <path d="M10 40 V120 C10 136, 90 136, 90 120 V40"/>
+      <ellipse cx="50" cy="120" rx="40" ry="16"/>
+      <ellipse cx="140" cy="55" rx="34" ry="14"/>
+      <path d="M106 55 V125 C106 139, 174 139, 174 125 V55"/>
+      <ellipse cx="140" cy="125" rx="34" ry="14"/>
+    </g>
+    <!-- Bow tie -->
+    <g transform="translate(1080,700)">
+      <path d="M20 40 L90 70 L20 100 Z"/>
+      <path d="M180 40 L110 70 L180 100 Z"/>
+      <rect x="85" y="55" width="30" height="30" rx="4"/>
+    </g>
+  </g>
+</svg>
