@@ -1,11 +1,14 @@
 /**
- * Tisso Collection — hotspot quick-view + Add to Cart (vanilla JS).
+ * Tisso Collection — load up to 6 products from a collection, hotspot quick-view,
+ * variant selection, and Add to Cart (vanilla JS).
  *
- * When Color=Black and Size=Medium are selected, also adds the configured
- * Soft Winter Jacket variant (if provided via data-bonus-variant-id).
+ * Products are fetched from /collections/{handle}/products.json so the grid
+ * is not limited by Liquid pagination quirks.
  */
 (function () {
   'use strict';
+
+  var PRODUCTS_LIMIT = 6;
 
   function formatMoney(cents) {
     if (typeof Shopify !== 'undefined' && typeof Shopify.formatMoney === 'function') {
@@ -15,10 +18,11 @@
   }
 
   function parseJSON(node) {
+    if (!node) return null;
     try {
       return JSON.parse(node.textContent);
     } catch (error) {
-      console.error('[Tisso Collection] Invalid product JSON', error);
+      console.error('[Tisso Collection] Invalid JSON', error);
       return null;
     }
   }
@@ -54,6 +58,83 @@
       pink: '#d46a8e',
     };
     return map[normalize(value)] || '#1f4b99';
+  }
+
+  function stripHtml(html) {
+    var template = document.createElement('div');
+    template.innerHTML = html || '';
+    return (template.textContent || template.innerText || '').trim();
+  }
+
+  function truncate(text, max) {
+    if (!text || text.length <= max) return text || '';
+    return text.slice(0, max - 1).trim() + '…';
+  }
+
+  /**
+   * Normalize Ajax /collections/.../products.json product into our modal shape.
+   * Ajax prices are dollar strings; convert to cents.
+   */
+  function normalizeAjaxProduct(product) {
+    var options = (product.options || []).map(function (option) {
+      if (typeof option === 'string') {
+        return { name: option, values: [] };
+      }
+      return {
+        name: option.name,
+        values: option.values || [],
+      };
+    });
+
+    // If option values were omitted, derive them from variants
+    options.forEach(function (option, index) {
+      if (option.values.length) return;
+      var key = 'option' + (index + 1);
+      var seen = {};
+      option.values = (product.variants || []).reduce(function (list, variant) {
+        var value = variant[key];
+        if (value && !seen[value]) {
+          seen[value] = true;
+          list.push(value);
+        }
+        return list;
+      }, []);
+    });
+
+    var image =
+      product.featured_image ||
+      (product.images && product.images[0] && (product.images[0].src || product.images[0])) ||
+      '';
+
+    return {
+      id: product.id,
+      title: product.title || '',
+      description: truncate(stripHtml(product.body_html || product.description || ''), 220),
+      price: toCents(product.price || (product.variants && product.variants[0] && product.variants[0].price)),
+      featured_image: image,
+      options: options,
+      variants: (product.variants || []).map(function (variant) {
+        return {
+          id: variant.id,
+          title: variant.title,
+          available: variant.available !== false,
+          price: toCents(variant.price),
+          option1: variant.option1,
+          option2: variant.option2,
+          option3: variant.option3,
+        };
+      }),
+    };
+  }
+
+  function toCents(value) {
+    // Ajax Collection API returns dollar amounts as strings (e.g. "980.00")
+    if (typeof value === 'string' || typeof value === 'number') {
+      var parsed = parseFloat(value);
+      if (Number.isNaN(parsed)) return 0;
+      return Math.round(parsed * 100);
+    }
+    return 0;
   }
 
   function findVariant(product, selections) {
@@ -110,17 +191,30 @@
         publish(PUB_SUB_EVENTS.cartUpdate, { source: 'tisso-collection' });
       }
     } catch (error) {
-      // Theme cart UI may not expose pubsub; cart was still updated.
+      // Non-fatal
     }
     document.dispatchEvent(new CustomEvent('cart:refresh'));
   }
 
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function TissoCollection(root) {
     this.root = root;
+    this.grid = root.querySelector('[data-tisso-grid]');
     this.popup = root.querySelector('[data-tisso-popup]');
+    this.products = [];
     this.product = null;
     this.selections = {};
     this.bonusVariantId = root.dataset.bonusVariantId || '';
+    this.collectionHandle = root.dataset.collectionHandle || '';
+    this.limit = parseInt(root.dataset.productsLimit || PRODUCTS_LIMIT, 10) || PRODUCTS_LIMIT;
 
     this.els = {
       thumb: root.querySelector('[data-tisso-popup-thumb]'),
@@ -137,15 +231,12 @@
     this.onKeydown = this.onKeydown.bind(this);
     this.onAddToCart = this.onAddToCart.bind(this);
 
-    this.bind();
+    this.bindChrome();
+    this.loadProducts();
   }
 
-  TissoCollection.prototype.bind = function () {
+  TissoCollection.prototype.bindChrome = function () {
     var self = this;
-
-    this.root.querySelectorAll('[data-tisso-hotspot]').forEach(function (button) {
-      button.addEventListener('click', self.onHotspotClick);
-    });
 
     this.root.querySelectorAll('[data-tisso-popup-close]').forEach(function (node) {
       node.addEventListener('click', self.onClose);
@@ -156,10 +247,90 @@
     }
   };
 
+  TissoCollection.prototype.loadProducts = function () {
+    var self = this;
+    var bootstrap = parseJSON(this.root.querySelector('[data-tisso-products-bootstrap]'));
+
+    if (this.collectionHandle) {
+      var rootUrl = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+      var url = rootUrl + 'collections/' + encodeURIComponent(this.collectionHandle) + '/products.json?limit=' + this.limit;
+
+      fetch(url, { headers: { Accept: 'application/json' } })
+        .then(function (response) {
+          if (!response.ok) throw new Error('Failed to load collection products');
+          return response.json();
+        })
+        .then(function (data) {
+          var products = (data.products || []).slice(0, self.limit).map(normalizeAjaxProduct);
+          if (!products.length && Array.isArray(bootstrap) && bootstrap.length) {
+            products = bootstrap.slice(0, self.limit);
+          }
+          self.products = products;
+          self.renderGrid();
+        })
+        .catch(function (error) {
+          console.warn('[Tisso Collection] Ajax load failed, using Liquid bootstrap', error);
+          self.products = Array.isArray(bootstrap) ? bootstrap.slice(0, self.limit) : [];
+          self.renderGrid();
+        });
+      return;
+    }
+
+    this.products = Array.isArray(bootstrap) ? bootstrap.slice(0, this.limit) : [];
+    this.renderGrid();
+  };
+
+  TissoCollection.prototype.renderGrid = function () {
+    if (!this.grid) return;
+
+    if (!this.products.length) {
+      this.grid.innerHTML =
+        '<li class="tisso-collection__empty-item"><p class="tisso-collection__empty">This collection has no products yet.</p></li>';
+      return;
+    }
+
+    var self = this;
+    this.grid.innerHTML = this.products
+      .map(function (product) {
+        var image = product.featured_image
+          ? '<img class="tisso-collection__image" src="' +
+            escapeHtml(product.featured_image) +
+            '" alt="' +
+            escapeHtml(product.title) +
+            '" loading="lazy" width="600" height="600">'
+          : '<div class="tisso-collection__placeholder">No image</div>';
+
+        return (
+          '<li class="tisso-collection__item" data-tisso-product-item data-product-id="' +
+          escapeHtml(product.id) +
+          '">' +
+          image +
+          '<button type="button" class="tisso-collection__hotspot" data-tisso-hotspot aria-label="Quick view ' +
+          escapeHtml(product.title) +
+          '"><span aria-hidden="true">+</span></button>' +
+          '</li>'
+        );
+      })
+      .join('');
+
+    this.grid.querySelectorAll('[data-tisso-hotspot]').forEach(function (button) {
+      button.addEventListener('click', self.onHotspotClick);
+    });
+  };
+
+  TissoCollection.prototype.getProductById = function (id) {
+    var target = String(id);
+    return (
+      this.products.find(function (product) {
+        return String(product.id) === target;
+      }) || null
+    );
+  };
+
   TissoCollection.prototype.onHotspotClick = function (event) {
     var item = event.currentTarget.closest('[data-tisso-product-item]');
-    var jsonNode = item && item.querySelector('[data-tisso-product-json]');
-    var product = jsonNode ? parseJSON(jsonNode) : null;
+    if (!item) return;
+    var product = this.getProductById(item.getAttribute('data-product-id'));
     if (!product) return;
     this.open(product);
   };
