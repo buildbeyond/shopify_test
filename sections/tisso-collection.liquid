@@ -42,6 +42,10 @@
         JS then loads /collections/{handle}/products.json to ensure up to 6 tiles.
       {%- endcomment -%}
       {%- for collection_product in section_collection.products limit: 6 -%}
+        {%- liquid
+          assign hotspot_x = collection_product.metafields.custom.hotspot_x.value | default: 50
+          assign hotspot_y = collection_product.metafields.custom.hotspot_y.value | default: 50
+        -%}
         <li
           class="tisso-collection__item"
           data-tisso-product-item
@@ -72,6 +76,7 @@
             type="button"
             class="tisso-collection__hotspot"
             data-tisso-hotspot
+            style="--hotspot-x: {{ hotspot_x }}%; --hotspot-y: {{ hotspot_y }}%;"
             aria-label="Quick view {{ collection_product.title | escape }}"
           >
             <span aria-hidden="true">+</span>
@@ -88,12 +93,18 @@
     <script type="application/json" data-tisso-products-bootstrap>
       [
         {%- for collection_product in section_collection.products limit: 6 -%}
+          {%- liquid
+            assign hotspot_x = collection_product.metafields.custom.hotspot_x.value | default: 50
+            assign hotspot_y = collection_product.metafields.custom.hotspot_y.value | default: 50
+          -%}
           {
             "id": {{ collection_product.id | json }},
             "title": {{ collection_product.title | json }},
             "description": {{ collection_product.description | strip_html | truncate: 220 | json }},
             "price": {{ collection_product.price | json }},
             "featured_image": {% if collection_product.featured_media %}{{ collection_product.featured_media | image_url: width: 1200 | json }}{% else %}""{% endif %},
+            "hotspot_x": {{ hotspot_x | json }},
+            "hotspot_y": {{ hotspot_y | json }},
             "options": [
               {%- for option in collection_product.options_with_values -%}
                 {
@@ -172,7 +183,7 @@
       "type": "collection",
       "id": "collection",
       "label": "Collection",
-      "info": "Displays up to 6 products from this collection."
+      "info": "Displays up to 6 products from this collection. Position each + icon with product metafields custom.hotspot_x and custom.hotspot_y (0–100)."
     },
     {
       "type": "product",

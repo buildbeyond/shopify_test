@@ -247,6 +247,32 @@
     }
   };
 
+  function clampPercent(value, fallback) {
+    var number = parseFloat(value);
+    if (Number.isNaN(number)) return fallback;
+    if (number < 0) return 0;
+    if (number > 100) return 100;
+    return number;
+  }
+
+  function mergeHotspotPositions(products, bootstrap) {
+    var map = {};
+
+    (bootstrap || []).forEach(function (item) {
+      map[String(item.id)] = {
+        hotspot_x: clampPercent(item.hotspot_x, 50),
+        hotspot_y: clampPercent(item.hotspot_y, 50),
+      };
+    });
+
+    return (products || []).map(function (product) {
+      var spots = map[String(product.id)] || {};
+      product.hotspot_x = clampPercent(spots.hotspot_x != null ? spots.hotspot_x : product.hotspot_x, 50);
+      product.hotspot_y = clampPercent(spots.hotspot_y != null ? spots.hotspot_y : product.hotspot_y, 50);
+      return product;
+    });
+  }
+
   TissoCollection.prototype.loadProducts = function () {
     var self = this;
     var bootstrap = parseJSON(this.root.querySelector('[data-tisso-products-bootstrap]'));
@@ -265,18 +291,24 @@
           if (!products.length && Array.isArray(bootstrap) && bootstrap.length) {
             products = bootstrap.slice(0, self.limit);
           }
-          self.products = products;
+          self.products = mergeHotspotPositions(products, bootstrap);
           self.renderGrid();
         })
         .catch(function (error) {
           console.warn('[Tisso Collection] Ajax load failed, using Liquid bootstrap', error);
-          self.products = Array.isArray(bootstrap) ? bootstrap.slice(0, self.limit) : [];
+          self.products = mergeHotspotPositions(
+            Array.isArray(bootstrap) ? bootstrap.slice(0, self.limit) : [],
+            bootstrap
+          );
           self.renderGrid();
         });
       return;
     }
 
-    this.products = Array.isArray(bootstrap) ? bootstrap.slice(0, this.limit) : [];
+    this.products = mergeHotspotPositions(
+      Array.isArray(bootstrap) ? bootstrap.slice(0, this.limit) : [],
+      bootstrap
+    );
     this.renderGrid();
   };
 
@@ -292,6 +324,8 @@
     var self = this;
     this.grid.innerHTML = this.products
       .map(function (product) {
+        var hotspotX = clampPercent(product.hotspot_x, 50);
+        var hotspotY = clampPercent(product.hotspot_y, 50);
         var image = product.featured_image
           ? '<img class="tisso-collection__image" src="' +
             escapeHtml(product.featured_image) +
@@ -305,7 +339,11 @@
           escapeHtml(product.id) +
           '">' +
           image +
-          '<button type="button" class="tisso-collection__hotspot" data-tisso-hotspot aria-label="Quick view ' +
+          '<button type="button" class="tisso-collection__hotspot" data-tisso-hotspot style="--hotspot-x: ' +
+          hotspotX +
+          '%; --hotspot-y: ' +
+          hotspotY +
+          '%;" aria-label="Quick view ' +
           escapeHtml(product.title) +
           '"><span aria-hidden="true">+</span></button>' +
           '</li>'

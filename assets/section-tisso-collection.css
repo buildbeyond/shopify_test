@@ -84,8 +84,8 @@
 
 .tisso-collection__hotspot {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: var(--hotspot-y, 50%);
+  left: var(--hotspot-x, 50%);
   z-index: 2;
   display: inline-flex;
   align-items: center;
